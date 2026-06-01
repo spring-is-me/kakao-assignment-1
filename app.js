@@ -2,9 +2,13 @@
 const todoInput = document.getElementById('todo-input');
 const addButton = document.getElementById('add-button');
 const todoList = document.getElementById('todo-list');
+const filterButtons = document.querySelectorAll('.filter-btn'); // 필터 버튼들 선택 (신규 추가)
 
-// Todo 데이터를 관리할 배열 (각 요소는 { id, text, completed } 구조)
+// Todo 데이터를 관리할 배열
 let todos = [];
+
+// 현재 선택된 필터 상태를 저장하는 변수 ('all', 'active', 'completed') (신규 추가)
+let currentFilter = 'all';
 
 /**
  * 새로운 Todo 항목을 생성하는 함수
@@ -12,25 +16,21 @@ let todos = [];
 function createTodo() {
     const todoText = todoInput.value.trim();
 
-    // 입력값이 비어있는지 검증 (공백 제외)
     if (todoText === '') {
         alert('할 일을 입력해주세요!');
         todoInput.focus();
         return;
     }
 
-    // 새 Todo 객체 생성
     const newTodo = {
-        id: Date.now(), // 고유 ID로 타임스탬프 사용
+        id: Date.now(),
         text: todoText,
         completed: false
     };
 
-    // 배열에 추가 후 화면 갱신
     todos.push(newTodo);
     renderTodos();
 
-    // 입력창 초기화 및 포커스
     todoInput.value = '';
     todoInput.focus();
 }
@@ -69,19 +69,15 @@ function handleEdit(id, todoItemElement) {
     const isEditing = todoItemElement.classList.contains('editing');
 
     if (!isEditing) {
-        // 1. 수정 모드로 전환
         todoItemElement.classList.add('editing');
         const currentText = todoTextElement.textContent;
         
-        // 텍스트를 입력창(input)으로 교체
         todoTextElement.innerHTML = `<input type="text" class="edit-input" value="${currentText}">`;
         editButton.textContent = '저장';
         
-        // 수정 입력창에 포커스 넣기
         const editInput = todoTextElement.querySelector('.edit-input');
         editInput.focus();
     } else {
-        // 2. 수정 사항 저장
         const editInput = todoTextElement.querySelector('.edit-input');
         const updatedText = editInput.value.trim();
 
@@ -91,7 +87,6 @@ function handleEdit(id, todoItemElement) {
             return;
         }
 
-        // 데이터 배열 업데이트
         todos = todos.map(todo => {
             if (todo.id === id) {
                 return { ...todo, text: updatedText };
@@ -99,56 +94,80 @@ function handleEdit(id, todoItemElement) {
             return todo;
         });
 
-        // 화면 갱신하여 수정 모드 해제 및 반영
         renderTodos();
     }
 }
 
 /**
- * todos 배열을 기반으로 화면에 목록을 그리 시각화(Render) 함수
+ * 필터링 탭 전환 및 버튼 스타일을 업데이트하는 함수 (신규 추가)
+ * @param {Event} event - 클릭 이벤트 객체
+ */
+function handleFilter(event) {
+    // 클릭된 버튼의 data-filter 속성 값 가져오기 ('all', 'active', 'completed')
+    currentFilter = event.target.getAttribute('data-filter');
+
+    // 모든 필터 버튼에서 active 클래스 제거
+    filterButtons.forEach(btn => btn.classList.remove('active'));
+    
+    // 현재 클릭된 버튼에만 active 클래스 추가
+    event.target.classList.add('active');
+
+    // 변경된 필터 조건으로 목록 다시 그리기
+    renderTodos();
+}
+
+/**
+ * 현재 필터 상태(currentFilter)에 따라 필터링된 배열을 반환하는 함수 (신규 추가)
+ * @returns {Array} 필터링된 Todo 배열
+ */
+function getFilteredTodos() {
+    if (currentFilter === 'active') {
+        return todos.filter(todo => !todo.completed); // 완료되지 않은 항목만
+    } else if (currentFilter === 'completed') {
+        return todos.filter(todo => todo.completed);  // 완료된 항목만
+    }
+    return todos; // 'all'인 경우 전체 항목 반환
+}
+
+/**
+ * todos 배열을 기반으로 화면에 목록을 그리는 시각화(Render) 함수
  */
 function renderTodos() {
-    // 기존 목록을 비우기
     todoList.innerHTML = '';
 
-    // 배열을 순회하며 DOM 요소 생성
-    todos.forEach(todo => {
+    // 현재 필터 조건에 맞는 데이터만 가져와서 순회 (수정)
+    const filteredTodos = getFilteredTodos();
+
+    filteredTodos.forEach(todo => {
         const li = document.createElement('li');
         li.className = `todo-item ${todo.completed ? 'completed' : ''}`;
 
-        // 할 일 텍스트 영역
         const textSpan = document.createElement('span');
         textSpan.className = 'todo-text';
         textSpan.textContent = todo.text;
 
-        // 버튼들을 담을 그룹
         const buttonGroup = document.createElement('div');
         buttonGroup.className = 'button-group';
 
-        // 완료 버튼
         const completeBtn = document.createElement('button');
         completeBtn.className = 'action-btn complete-btn';
         completeBtn.textContent = todo.completed ? '해제' : '완료';
         completeBtn.addEventListener('click', () => toggleComplete(todo.id));
 
-        // 수정 버튼
         const editBtn = document.createElement('button');
         editBtn.className = 'action-btn edit-btn';
         editBtn.textContent = '수정';
         editBtn.addEventListener('click', () => handleEdit(todo.id, li));
 
-        // 삭제 버튼
         const deleteBtn = document.createElement('button');
         deleteBtn.className = 'action-btn delete-btn';
         deleteBtn.textContent = '삭제';
         deleteBtn.addEventListener('click', () => deleteTodo(todo.id));
 
-        // 완료된 상태일 때는 수정 버튼 비활성화 처리 (선택 사항)
         if (todo.completed) {
             editBtn.style.display = 'none';
         }
 
-        // 트리 구조 조립
         buttonGroup.appendChild(completeBtn);
         buttonGroup.appendChild(editBtn);
         buttonGroup.appendChild(deleteBtn);
@@ -163,9 +182,13 @@ function renderTodos() {
 // 이벤트 리스너 등록
 addButton.addEventListener('click', createTodo);
 
-// 입력창에서 Enter 키를 눌렀을 때도 Todo 추가 가능하도록 설정
 todoInput.addEventListener('keypress', (event) => {
     if (event.key === 'Enter') {
         createTodo();
     }
+});
+
+// 각각의 필터 버튼에 클릭 이벤트 리스너 추가 (신규 추가)
+filterButtons.forEach(button => {
+    button.addEventListener('click', handleFilter);
 });

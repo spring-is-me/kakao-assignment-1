@@ -38,7 +38,7 @@ header h1 {
 .input-section {
     display: flex;
     gap: 8px;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem; /* 필터 공간을 위해 마진 약간 조절 */
 }
 
 #todo-input {
@@ -71,6 +71,40 @@ header h1 {
 
 #add-button:hover {
     background-color: #5222b3;
+}
+
+/* 필터 탭 컨테이너 스타일 (신규 추가) */
+.filter-container {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 8px;
+}
+
+/* 필터 버튼 기본 스타일 (신규 추가) */
+.filter-btn {
+    background: none;
+    border: none;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #64748b;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+    background-color: #f1f5f9;
+    color: #334155;
+}
+
+/* 활성화된 필터 버튼 스타일 - 메인 컬러(#672be0) 적용 (신규 추가) */
+.filter-btn.active {
+    background-color: #f3e8ff;
+    color: #672be0;
+    font-weight: 600;
 }
 
 /* Todo 목록 스타일 */
