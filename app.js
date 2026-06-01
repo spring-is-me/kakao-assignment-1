@@ -27,27 +27,36 @@ function init() {
     todoForm.addEventListener('submit', handleTodoSubmit);
     initFilterEvents();
     initDateEvents();
+    
+    // 1. 화면에 날짜 포맷팅 반영
     updateDateDisplay();
     
-    // [조건] 앱 시작 시 로컬 스토리지에서 기존 데이터를 로드합니다.
+    // 2. 로컬 스토리지에서 기존 보관된 데이터를 순차적으로 로드
     loadFromLocalStorage();
+    
+    // 3. 로드된 데이터 세션을 바탕으로 최초 렌더링 즉시 실행
     renderTodos();
 }
 
 /**
- * [조건] 로컬 스토리지에 현재 todos 배열 상태를 JSON 문자열로 저장하는 함수
+ * 로컬 스토리지에 현재 todos 배열 상태를 JSON 문자열로 저장하는 함수
  */
 function saveToLocalStorage() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
 }
 
 /**
- * [조건] 로컬 스토리지에서 JSON 데이터를 파싱하여 불러오는 함수
+ * 로컬 스토리지에서 JSON 데이터를 파싱하여 불러오는 함수
  */
 function loadFromLocalStorage() {
     const storageData = localStorage.getItem(STORAGE_KEY);
-    // 데이터가 존재하면 JSON.parse로 복원하고, 없으면 빈 배열 설정
-    todos = storageData ? JSON.parse(storageData) : [];
+    // 안전한 파싱을 위해 삼항 연산자 처리 및 예외 처리 구문 배치
+    try {
+        todos = storageData ? JSON.parse(storageData) : [];
+    } catch (e) {
+        console.error("로컬 스토리지 데이터를 읽어오는 중 에러가 발생했습니다.", e);
+        todos = [];
+    }
 }
 
 /**
@@ -202,7 +211,7 @@ function toggleComplete(id) {
     todos = todos.map(todo => 
         todo.id === id ? { ...todo, completed: !todo.completed } : todo
     );
-    saveToLocalStorage(); // 상태 변경 저장
+    saveToLocalStorage();
     renderTodos();
 }
 
@@ -262,7 +271,7 @@ function updateTodoText(id, newText) {
     todos = todos.map(todo => 
         todo.id === id ? { ...todo, text: newText } : todo
     );
-    saveToLocalStorage(); // 수정 사항 저장
+    saveToLocalStorage();
     renderTodos();
 }
 
@@ -271,7 +280,7 @@ function updateTodoText(id, newText) {
  */
 function deleteTodo(id) {
     todos = todos.filter(todo => todo.id !== id);
-    saveToLocalStorage(); // 삭제 반영 저장
+    saveToLocalStorage();
     renderTodos();
 }
 
