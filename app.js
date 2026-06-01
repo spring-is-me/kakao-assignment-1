@@ -7,52 +7,70 @@ const addButton = document.getElementById('add-button');
 const filterButtons = document.querySelectorAll('.filter-btn');
 const todoList = document.getElementById('todo-list');
 
-// Todo 데이터를 관리할 배열 (각 요소는 { id, text, completed, date } 구조)
-let todos = [];
+// 로컬스토리지 저장에 사용할 Key 상수 정의 (신규 추가)
+const STORAGE_KEY = 'minimal_todo_app_todos';
+
+// Todo 데이터를 관리할 배열 (로컬스토리지에서 데이터를 초기 로드하도록 설정)
+let todos = loadTodosFromStorage();
 
 // 현재 선택된 필터 상태 ('all', 'active', 'completed')
 let currentFilter = 'all';
 
-// 현재 사용자가 보고 있는 날짜 객체 관리 (신규 추가)
+// 현재 사용자가 보고 있는 날짜 객체 관리
 let currentDate = new Date();
 
 /**
- * Date 객체를 'YYYY-MM-DD' 형식의 문자열로 변환하는 헬퍼 함수 (신규 추가)
+ * 로컬스토리지에 현재의 todos 배열 상태를 JSON 문자열로 저장하는 함수 (신규 추가)
+ */
+function saveTodosToStorage() {
+    // JSON.stringify를 사용하여 객체 배열을 직렬화 후 저장
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+}
+
+/**
+ * 로컬스토리지에서 데이터를 읽어와 파싱 후 배열로 반환하는 함수 (신규 추가)
+ * @returns {Array} 로컬스토리지에서 꺼낸 Todo 배열 혹은 빈 배열
+ */
+function loadTodosFromStorage() {
+    const storageData = localStorage.getItem(STORAGE_KEY);
+    // 데이터가 존재하면 JSON.parse로 복원, 없으면 빈 배열 반환
+    return storageData ? JSON.parse(storageData) : [];
+}
+
+/**
+ * Date 객체를 'YYYY-MM-DD' 형식의 문자열로 변환하는 헬퍼 함수
  * @param {Date} dateObj - 변환할 Date 객체
  * @returns {string} 'YYYY-MM-DD' 형식의 문자열
  */
 function formatDateString(dateObj) {
     const year = dateObj.getFullYear();
-    // 월과 일은 항상 2자리 문자열이 되도록 padding 처리
     const month = String(dateObj.getMonth() + 1).padStart(2, '0');
     const date = String(dateObj.getDate()).padStart(2, '0');
     return `${year}-${month}-${date}`;
-    }
+}
 
 /**
- * 화면 상단의 날짜 텍스트를 현재 선택된 날짜에 맞게 업데이트하는 함수 (신규 추가)
+ * 화면 상단의 날짜 텍스트를 현재 선택된 날짜에 맞게 업데이트하는 함수
  */
 function updateDateDisplay() {
     const year = currentDate.getFullYear();
     const month = String(currentDate.getMonth() + 1).padStart(2, '0');
     const date = String(currentDate.getDate()).padStart(2, '0');
-    
-    // UI에 보여줄 텍스트 형식 설정
     currentDateDisplay.textContent = `${year}년 ${month}월 ${date}일`;
 }
 
 /**
- * 날짜를 이전이나 다음으로 이동시키는 함수 (신규 추가)
+ * 날짜를 이전이나 다음으로 이동시키는 함수
  * @param {number} offset - 이동할 일수 (-1은 하루 전, 1은 하루 뒤)
  */
 function moveDate(offset) {
     currentDate.setDate(currentDate.getDate() + offset);
     updateDateDisplay();
-    renderTodos(); // 날짜가 바뀌었으므로 해당 날짜의 목록 재렌더링
+    renderTodos();
 }
 
 /**
- * 새로운 Todo 항목을 생성하는 함수 (수정)
+ * 새로운 Todo 항목을 생성하는 함수 (수정 - 데이터 저장 연동)
  */
 function createTodo() {
     const todoText = todoInput.value.trim();
@@ -63,15 +81,17 @@ function createTodo() {
         return;
     }
 
-    // 새 Todo 객체 생성 시 현재 선택된 날짜 문자열('YYYY-MM-DD')을 함께 보관
     const newTodo = {
         id: Date.now(),
         text: todoText,
         completed: false,
-        date: formatDateString(currentDate) // 날짜 데이터 바인딩 (신규 추가)
+        date: formatDateString(currentDate)
     };
 
     todos.push(newTodo);
+    
+    // 로컬스토리지 저장 및 화면 동기화
+    saveTodosToStorage();
     renderTodos();
 
     todoInput.value = '';
@@ -79,16 +99,19 @@ function createTodo() {
 }
 
 /**
- * Todo 항목을 삭제하는 함수
+ * Todo 항목을 삭제하는 함수 (수정 - 데이터 저장 연동)
  * @param {number} id - 삭제할 Todo의 고유 ID
  */
 function deleteTodo(id) {
     todos = todos.filter(todo => todo.id !== id);
+    
+    // 로컬스토리지 저장 및 화면 동기화
+    saveTodosToStorage();
     renderTodos();
 }
 
 /**
- * Todo 항목의 완료 상태를 토글하는 함수
+ * Todo 항목의 완료 상태를 토글하는 함수 (수정 - 데이터 저장 연동)
  * @param {number} id - 토글할 Todo의 고유 ID
  */
 function toggleComplete(id) {
@@ -98,11 +121,14 @@ function toggleComplete(id) {
         }
         return todo;
     });
+    
+    // 로컬스토리지 저장 및 화면 동기화
+    saveTodosToStorage();
     renderTodos();
 }
 
 /**
- * Todo 항목을 수정 모드로 전환하거나 수정을 확정하는 함수
+ * Todo 항목을 수정 모드로 전환하거나 수정을 확정하는 함수 (수정 - 데이터 저장 연동)
  * @param {number} id - 수정할 Todo의 고유 ID
  * @param {HTMLElement} todoItemElement - 해당 Todo의 DOM 요소
  */
@@ -137,6 +163,8 @@ function handleEdit(id, todoItemElement) {
             return todo;
         });
 
+        // 로컬스토리지 저장 및 화면 동기화
+        saveTodosToStorage();
         renderTodos();
     }
 }
@@ -153,16 +181,13 @@ function handleFilter(event) {
 }
 
 /**
- * 날짜 필터링과 상태 필터링을 둘 다 적용하여 최종 출력할 배열을 반환하는 함수 (수정)
+ * 날짜 필터링과 상태 필터링을 둘 다 적용하여 최종 출력할 배열을 반환하는 함수
  * @returns {Array} 필터링이 완료된 Todo 배열
  */
 function getFilteredTodos() {
     const targetDateString = formatDateString(currentDate);
-
-    // 1차 필터링: 현재 화면에 선택된 날짜와 일치하는 Todo만 선별
     const dateFilteredTodos = todos.filter(todo => todo.date === targetDateString);
 
-    // 2차 필터링: 선택된 진행 상태(전체/진행 중/완료)에 따라 선별
     if (currentFilter === 'active') {
         return dateFilteredTodos.filter(todo => !todo.completed);
     } else if (currentFilter === 'completed') {
@@ -177,7 +202,6 @@ function getFilteredTodos() {
 function renderTodos() {
     todoList.innerHTML = '';
 
-    // 날짜 및 상태 조건이 모두 반영된 배열 가져오기
     const filteredTodos = getFilteredTodos();
 
     filteredTodos.forEach(todo => {
@@ -234,10 +258,9 @@ filterButtons.forEach(button => {
     button.addEventListener('click', handleFilter);
 });
 
-// 날짜 이동 버튼 이벤트 리스너 등록 (신규 추가)
-prevDateButton.addEventListener('click', () => moveDate(-1)); // 하루 전으로
-nextDateButton.addEventListener('click', () => moveDate(1));  // 하루 뒤로
+prevDateButton.addEventListener('click', () => moveDate(-1));
+nextDateButton.addEventListener('click', () => moveDate(1));
 
-// 초기 앱 실행 시 기본 세팅 및 화면 그리기 (신규 추가)
+// 초기 앱 실행 시 기본 세팅 및 화면 그리기 (복원된 로컬스토리지 데이터가 리스트에 적용됨)
 updateDateDisplay();
 renderTodos();

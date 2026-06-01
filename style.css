@@ -26,7 +26,7 @@ body {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
-/* 일간 뷰 내비게이션 스타일 (신규 추가) */
+/* 일간 뷰 내비게이션 스타일 */
 .date-navigator {
     display: flex;
     align-items: center;
@@ -58,7 +58,7 @@ body {
 
 .nav-btn:hover {
     background-color: #f1f5f9;
-    color: #672be0; /* 메인 컬러 반영 */
+    color: #672be0;
 }
 
 /* 입력창 및 버튼 섹션 */
