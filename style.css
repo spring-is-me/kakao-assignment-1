@@ -26,19 +26,46 @@ body {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
-/* 헤더 스타일 */
-header h1 {
-    font-size: 1.8rem;
-    font-weight: 700;
+/* 일간 뷰 내비게이션 스타일 (신규 추가) */
+.date-navigator {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 1.5rem;
+}
+
+#current-date-display {
+    font-size: 1.4rem;
+    font-weight: 700;
     color: #111;
+}
+
+.nav-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+    background-color: #f1f5f9;
+    color: #672be0; /* 메인 컬러 반영 */
 }
 
 /* 입력창 및 버튼 섹션 */
 .input-section {
     display: flex;
     gap: 8px;
-    margin-bottom: 1.5rem; /* 필터 공간을 위해 마진 약간 조절 */
+    margin-bottom: 1.5rem;
 }
 
 #todo-input {
@@ -73,7 +100,7 @@ header h1 {
     background-color: #5222b3;
 }
 
-/* 필터 탭 컨테이너 스타일 (신규 추가) */
+/* 필터 탭 컨테이너 스타일 */
 .filter-container {
     display: flex;
     gap: 8px;
@@ -82,7 +109,7 @@ header h1 {
     padding-bottom: 8px;
 }
 
-/* 필터 버튼 기본 스타일 (신규 추가) */
+/* 필터 버튼 기본 스타일 */
 .filter-btn {
     background: none;
     border: none;
@@ -100,7 +127,7 @@ header h1 {
     color: #334155;
 }
 
-/* 활성화된 필터 버튼 스타일 - 메인 컬러(#672be0) 적용 (신규 추가) */
+/* 활성화된 필터 버튼 스타일 - 메인 컬러(#672be0) 적용 */
 .filter-btn.active {
     background-color: #f3e8ff;
     color: #672be0;

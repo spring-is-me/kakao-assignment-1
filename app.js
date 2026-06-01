@@ -1,17 +1,58 @@
 // DOM 요소 선택
+const currentDateDisplay = document.getElementById('current-date-display');
+const prevDateButton = document.getElementById('prev-date-btn');
+const nextDateButton = document.getElementById('next-date-btn');
 const todoInput = document.getElementById('todo-input');
 const addButton = document.getElementById('add-button');
+const filterButtons = document.querySelectorAll('.filter-btn');
 const todoList = document.getElementById('todo-list');
-const filterButtons = document.querySelectorAll('.filter-btn'); // 필터 버튼들 선택 (신규 추가)
 
-// Todo 데이터를 관리할 배열
+// Todo 데이터를 관리할 배열 (각 요소는 { id, text, completed, date } 구조)
 let todos = [];
 
-// 현재 선택된 필터 상태를 저장하는 변수 ('all', 'active', 'completed') (신규 추가)
+// 현재 선택된 필터 상태 ('all', 'active', 'completed')
 let currentFilter = 'all';
 
+// 현재 사용자가 보고 있는 날짜 객체 관리 (신규 추가)
+let currentDate = new Date();
+
 /**
- * 새로운 Todo 항목을 생성하는 함수
+ * Date 객체를 'YYYY-MM-DD' 형식의 문자열로 변환하는 헬퍼 함수 (신규 추가)
+ * @param {Date} dateObj - 변환할 Date 객체
+ * @returns {string} 'YYYY-MM-DD' 형식의 문자열
+ */
+function formatDateString(dateObj) {
+    const year = dateObj.getFullYear();
+    // 월과 일은 항상 2자리 문자열이 되도록 padding 처리
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const date = String(dateObj.getDate()).padStart(2, '0');
+    return `${year}-${month}-${date}`;
+    }
+
+/**
+ * 화면 상단의 날짜 텍스트를 현재 선택된 날짜에 맞게 업데이트하는 함수 (신규 추가)
+ */
+function updateDateDisplay() {
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const date = String(currentDate.getDate()).padStart(2, '0');
+    
+    // UI에 보여줄 텍스트 형식 설정
+    currentDateDisplay.textContent = `${year}년 ${month}월 ${date}일`;
+}
+
+/**
+ * 날짜를 이전이나 다음으로 이동시키는 함수 (신규 추가)
+ * @param {number} offset - 이동할 일수 (-1은 하루 전, 1은 하루 뒤)
+ */
+function moveDate(offset) {
+    currentDate.setDate(currentDate.getDate() + offset);
+    updateDateDisplay();
+    renderTodos(); // 날짜가 바뀌었으므로 해당 날짜의 목록 재렌더링
+}
+
+/**
+ * 새로운 Todo 항목을 생성하는 함수 (수정)
  */
 function createTodo() {
     const todoText = todoInput.value.trim();
@@ -22,10 +63,12 @@ function createTodo() {
         return;
     }
 
+    // 새 Todo 객체 생성 시 현재 선택된 날짜 문자열('YYYY-MM-DD')을 함께 보관
     const newTodo = {
         id: Date.now(),
         text: todoText,
-        completed: false
+        completed: false,
+        date: formatDateString(currentDate) // 날짜 데이터 바인딩 (신규 추가)
     };
 
     todos.push(newTodo);
@@ -99,34 +142,33 @@ function handleEdit(id, todoItemElement) {
 }
 
 /**
- * 필터링 탭 전환 및 버튼 스타일을 업데이트하는 함수 (신규 추가)
+ * 필터링 탭 전환 및 버튼 스타일을 업데이트하는 함수
  * @param {Event} event - 클릭 이벤트 객체
  */
 function handleFilter(event) {
-    // 클릭된 버튼의 data-filter 속성 값 가져오기 ('all', 'active', 'completed')
     currentFilter = event.target.getAttribute('data-filter');
-
-    // 모든 필터 버튼에서 active 클래스 제거
     filterButtons.forEach(btn => btn.classList.remove('active'));
-    
-    // 현재 클릭된 버튼에만 active 클래스 추가
     event.target.classList.add('active');
-
-    // 변경된 필터 조건으로 목록 다시 그리기
     renderTodos();
 }
 
 /**
- * 현재 필터 상태(currentFilter)에 따라 필터링된 배열을 반환하는 함수 (신규 추가)
- * @returns {Array} 필터링된 Todo 배열
+ * 날짜 필터링과 상태 필터링을 둘 다 적용하여 최종 출력할 배열을 반환하는 함수 (수정)
+ * @returns {Array} 필터링이 완료된 Todo 배열
  */
 function getFilteredTodos() {
+    const targetDateString = formatDateString(currentDate);
+
+    // 1차 필터링: 현재 화면에 선택된 날짜와 일치하는 Todo만 선별
+    const dateFilteredTodos = todos.filter(todo => todo.date === targetDateString);
+
+    // 2차 필터링: 선택된 진행 상태(전체/진행 중/완료)에 따라 선별
     if (currentFilter === 'active') {
-        return todos.filter(todo => !todo.completed); // 완료되지 않은 항목만
+        return dateFilteredTodos.filter(todo => !todo.completed);
     } else if (currentFilter === 'completed') {
-        return todos.filter(todo => todo.completed);  // 완료된 항목만
+        return dateFilteredTodos.filter(todo => todo.completed);
     }
-    return todos; // 'all'인 경우 전체 항목 반환
+    return dateFilteredTodos;
 }
 
 /**
@@ -135,7 +177,7 @@ function getFilteredTodos() {
 function renderTodos() {
     todoList.innerHTML = '';
 
-    // 현재 필터 조건에 맞는 데이터만 가져와서 순회 (수정)
+    // 날짜 및 상태 조건이 모두 반영된 배열 가져오기
     const filteredTodos = getFilteredTodos();
 
     filteredTodos.forEach(todo => {
@@ -188,7 +230,14 @@ todoInput.addEventListener('keypress', (event) => {
     }
 });
 
-// 각각의 필터 버튼에 클릭 이벤트 리스너 추가 (신규 추가)
 filterButtons.forEach(button => {
     button.addEventListener('click', handleFilter);
 });
+
+// 날짜 이동 버튼 이벤트 리스너 등록 (신규 추가)
+prevDateButton.addEventListener('click', () => moveDate(-1)); // 하루 전으로
+nextDateButton.addEventListener('click', () => moveDate(1));  // 하루 뒤로
+
+// 초기 앱 실행 시 기본 세팅 및 화면 그리기 (신규 추가)
+updateDateDisplay();
+renderTodos();
