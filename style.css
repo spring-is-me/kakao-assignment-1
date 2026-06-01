@@ -1,219 +1,240 @@
-/* 기본 스타일 초기화 및 폰트 설정 */
+/* 전반적인 테마 및 레이아웃 초기화 */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
 }
 
 body {
     background-color: #f8f9fa;
-    color: #333;
+    color: #333333;
     display: flex;
     justify-content: center;
-    align-items: start;
+    align-items: center;
     min-height: 100vh;
-    padding-top: 100px;
+    padding: 20px;
 }
 
-/* 메인 앱 컨테이너 */
-.app-container {
+/* 메인 컨테이너 스타일 */
+.todo-container {
     background-color: #ffffff;
     width: 100%;
     max-width: 480px;
     padding: 2rem;
     border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
-/* 일간 뷰 내비게이션 스타일 */
-.date-navigator {
+/* 헤더 스타일 */
+header {
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #672be0; /* 메인 컬러 적용 */
+    margin-bottom: 0.4rem;
+}
+
+header .subtitle {
+    font-size: 0.9rem;
+    color: #868e96;
+}
+
+/* 날짜 네비게이션 스타일 */
+.date-navigation {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    background-color: #f3f0ff; /* 메인 컬러 연한 배경 연출 */
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
     margin-bottom: 1.5rem;
 }
 
 #current-date-display {
-    font-size: 1.4rem;
+    font-size: 1.1rem;
     font-weight: 700;
-    color: #111;
+    color: #672be0;
 }
 
 .nav-btn {
     background: none;
     border: none;
     font-size: 1.2rem;
-    font-weight: 600;
-    color: #64748b;
+    font-weight: 700;
+    color: #672be0;
     cursor: pointer;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
+    border-radius: 50%;
+    transition: background-color 0.2s;
 }
 
 .nav-btn:hover {
-    background-color: #f1f5f9;
-    color: #672be0;
+    background-color: rgba(103, 43, 224, 0.1);
 }
 
-/* 입력창 및 버튼 섹션 */
-.input-section {
+/* 입력 폼 스타일 */
+#todo-form {
     display: flex;
     gap: 8px;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
 }
 
 #todo-input {
     flex: 1;
-    padding: 12px 16px;
-    border: 2px solid #e2e8f0;
+    padding: 0.8rem 1rem;
+    border: 1px solid #dee2e6;
     border-radius: 8px;
-    font-size: 1rem;
-    outline: none;
-    transition: border-color 0.2s ease;
+    font-size: 0.95rem;
+    transition: border-color 0.2s;
 }
 
-/* 입력창 포커스 시 메인 컬러(#672be0) 적용 */
 #todo-input:focus {
+    outline: none;
     border-color: #672be0;
 }
 
-/* 메인 컬러(#672be0)를 적용한 추가 버튼 */
-#add-button {
+#add-btn {
     background-color: #672be0;
-    color: white;
+    color: #ffffff;
     border: none;
-    padding: 0 20px;
+    padding: 0.8rem 1.2rem;
     border-radius: 8px;
-    font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.2s;
 }
 
-#add-button:hover {
-    background-color: #5222b3;
+#add-btn:hover {
+    background-color: #5222b5;
 }
 
-/* 필터 탭 컨테이너 스타일 */
-.filter-container {
+/* 경고 메시지 스타일 */
+.error-message {
+    font-size: 0.85rem;
+    color: #e03131;
+    min-height: 1.2rem;
+    margin-left: 4px;
+    margin-bottom: 1rem;
+}
+
+/* 필터 섹션 스타일 */
+.filter-section {
     display: flex;
-    gap: 8px;
+    gap: 4px;
     margin-bottom: 1.5rem;
-    border-bottom: 1px solid #e2e8f0;
-    padding-bottom: 8px;
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 0.5rem;
 }
 
-/* 필터 버튼 기본 스타일 */
 .filter-btn {
     background: none;
     border: none;
-    padding: 6px 12px;
+    padding: 0.5rem 1rem;
     font-size: 0.9rem;
     font-weight: 500;
-    color: #64748b;
+    color: #868e96;
     cursor: pointer;
     border-radius: 6px;
-    transition: all 0.2s ease;
+    transition: all 0.2s;
 }
 
 .filter-btn:hover {
-    background-color: #f1f5f9;
-    color: #334155;
+    background-color: #f1f3f5;
+    color: #495057;
 }
 
-/* 활성화된 필터 버튼 스타일 - 메인 컬러(#672be0) 적용 */
 .filter-btn.active {
-    background-color: #f3e8ff;
+    background-color: #f3f0ff;
     color: #672be0;
     font-weight: 600;
 }
 
-/* Todo 목록 스타일 */
+/* Todo 리스트 및 아이템 스타일 */
 #todo-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
 }
 
-/* 개별 Todo 아이템 */
 .todo-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 16px;
-    background-color: #f8fafc;
-    border: 1px solid #f1f5f9;
+    padding: 0.8rem 1rem;
+    background-color: #f1f3f5;
     border-radius: 8px;
-    transition: all 0.2s ease;
+    transition: all 0.2s;
 }
 
-/* 완료된 Todo 아이템 배경 처리 */
 .todo-item.completed {
-    background-color: #f1f5f9;
+    background-color: #f8f9fa;
     opacity: 0.6;
 }
 
-/* 할 일 텍스트 스타일 */
 .todo-text {
     flex: 1;
-    font-size: 1rem;
-    color: #334155;
-    margin-right: 12px;
+    font-size: 0.95rem;
     word-break: break-all;
+    margin-right: 10px;
 }
 
-/* 완료 시 취소선 처리 */
 .todo-item.completed .todo-text {
     text-decoration: line-through;
-    color: #94a3b8;
+    color: #868e96;
 }
 
-/* 수정 모드용 입력창 스타일 */
 .edit-input {
     flex: 1;
-    padding: 6px 10px;
+    padding: 0.4rem 0.6rem;
     border: 1px solid #672be0;
     border-radius: 4px;
-    font-size: 1rem;
-    outline: none;
-    margin-right: 12px;
+    font-size: 0.95rem;
+    margin-right: 10px;
 }
 
-/* 버튼 그룹 */
-.button-group {
+/* 버튼 그룹 스타일 */
+.btn-group {
     display: flex;
     gap: 4px;
 }
 
-/* 아이템 제어 버튼 공통 스타일 */
-.action-btn {
+.btn-group button {
     border: none;
-    padding: 6px 10px;
+    padding: 0.4rem 0.6rem;
     border-radius: 4px;
-    font-size: 0.85rem;
-    cursor: pointer;
+    font-size: 0.8rem;
     font-weight: 500;
-    transition: background-color 0.2s ease;
+    cursor: pointer;
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    color: #495057;
+    transition: all 0.2s;
 }
 
-.complete-btn { background-color: #e2e8f0; color: #475569; }
-.complete-btn:hover { background-color: #cbd5e1; }
+.complete-btn:hover {
+    background-color: #e8f5e9;
+    color: #2b8a3e;
+    border-color: #2b8a3e;
+}
 
-.edit-btn { background-color: #e0e7ff; color: #4f46e5; }
-.edit-btn:hover { background-color: #c7d2fe; }
+.edit-btn:hover, .save-btn:hover {
+    background-color: #f3f0ff;
+    color: #672be0;
+    border-color: #672be0;
+}
 
-.delete-btn { background-color: #fee2e2; color: #dc2626; }
-.delete-btn:hover { background-color: #fecaca; }
-
-/* 완료 버튼 상태 변화 */
-.todo-item.completed .complete-btn {
-    background-color: #672be0;
-    color: white;
+.delete-btn:hover {
+    background-color: #fff5f5;
+    color: #c92a2a;
+    border-color: #c92a2a;
 }
