@@ -1,0 +1,18 @@
+INFO:     127.0.0.1:51721 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51723 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51727 - "POST /todos HTTP/1.1" 201 Created
+INFO:     127.0.0.1:51728 - "GET /todos?date_key=2026-06-23 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51729 - "PUT /todos/1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51730 - "DELETE /todos/1 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:64290 - "GET /todos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49722 - "GET /todos?date_key=2026-06-23 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63421 - "GET /todos?date_key=2026-06-23 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63422 - "GET /todos?date_key=2026-06-23 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62166 - "POST /todos HTTP/1.1" 201 Created
+INFO:     127.0.0.1:62166 - "GET /todos?date_key=2026-06-23 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62167 - "GET /todos?date_key=2026-06-23 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62166 - "PUT /todos/1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62167 - "GET /todos?date_key=2026-06-23 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62166 - "DELETE /todos/1 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:62166 - "GET /todos?date_key=2026-06-23 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62167 - "GET /todos?date_key=2026-06-23 HTTP/1.1" 200 OK
