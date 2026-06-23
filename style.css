@@ -1,0 +1,240 @@
+/* 전반적인 테마 및 레이아웃 초기화 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+}
+
+body {
+    background-color: #f8f9fa;
+    color: #333333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* 메인 컨테이너 스타일 */
+.todo-container {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 480px;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* 헤더 스타일 */
+header {
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #672be0; /* 메인 컬러 적용 */
+    margin-bottom: 0.4rem;
+}
+
+header .subtitle {
+    font-size: 0.9rem;
+    color: #868e96;
+}
+
+/* 날짜 네비게이션 스타일 */
+.date-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f3f0ff; /* 메인 컬러 연한 배경 연출 */
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+}
+
+#current-date-display {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #672be0;
+}
+
+.nav-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #672be0;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.nav-btn:hover {
+    background-color: rgba(103, 43, 224, 0.1);
+}
+
+/* 입력 폼 스타일 */
+#todo-form {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 0.5rem;
+}
+
+#todo-input {
+    flex: 1;
+    padding: 0.8rem 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: border-color 0.2s;
+}
+
+#todo-input:focus {
+    outline: none;
+    border-color: #672be0;
+}
+
+#add-btn {
+    background-color: #672be0;
+    color: #ffffff;
+    border: none;
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#add-btn:hover {
+    background-color: #5222b5;
+}
+
+/* 경고 메시지 스타일 */
+.error-message {
+    font-size: 0.85rem;
+    color: #e03131;
+    min-height: 1.2rem;
+    margin-left: 4px;
+    margin-bottom: 1rem;
+}
+
+/* 필터 섹션 스타일 */
+.filter-section {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 0.5rem;
+}
+
+.filter-btn {
+    background: none;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #868e96;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.filter-btn:hover {
+    background-color: #f1f3f5;
+    color: #495057;
+}
+
+.filter-btn.active {
+    background-color: #f3f0ff;
+    color: #672be0;
+    font-weight: 600;
+}
+
+/* Todo 리스트 및 아이템 스타일 */
+#todo-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.todo-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.8rem 1rem;
+    background-color: #f1f3f5;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.todo-item.completed {
+    background-color: #f8f9fa;
+    opacity: 0.6;
+}
+
+.todo-text {
+    flex: 1;
+    font-size: 0.95rem;
+    word-break: break-all;
+    margin-right: 10px;
+}
+
+.todo-item.completed .todo-text {
+    text-decoration: line-through;
+    color: #868e96;
+}
+
+.edit-input {
+    flex: 1;
+    padding: 0.4rem 0.6rem;
+    border: 1px solid #672be0;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    margin-right: 10px;
+}
+
+/* 버튼 그룹 스타일 */
+.btn-group {
+    display: flex;
+    gap: 4px;
+}
+
+.btn-group button {
+    border: none;
+    padding: 0.4rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    color: #495057;
+    transition: all 0.2s;
+}
+
+.complete-btn:hover {
+    background-color: #e8f5e9;
+    color: #2b8a3e;
+    border-color: #2b8a3e;
+}
+
+.edit-btn:hover, .save-btn:hover {
+    background-color: #f3f0ff;
+    color: #672be0;
+    border-color: #672be0;
+}
+
+.delete-btn:hover {
+    background-color: #fff5f5;
+    color: #c92a2a;
+    border-color: #c92a2a;
+}
